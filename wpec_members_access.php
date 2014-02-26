@@ -113,7 +113,7 @@ function wpec_members_add_cancel() {
 add_action( 'wpsc_additional_user_profile_links', 'wpec_members_add_cancel' );
 
 function wpec_members_cancel_subscription() {
-    if ( $_REQUEST['cancel_members_subscription'] == true ) {
+    if ( isset ( $_REQUEST['cancel_members_subscription'] ) && $_REQUEST['cancel_members_subscription'] == true ) {
         wpec_members_cancel_user_subscription(); // this will remove the subscription entirely
     }
 }

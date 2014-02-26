@@ -1,5 +1,5 @@
 <?php
-$role = & get_role( 'administrator' );
+$role = get_role( 'administrator' );
 $role->add_cap( 'wpsc_manage_subscriptions' );
 $wpsc_product_capability_list = get_option( 'wpsc_product_capability_list' );
 

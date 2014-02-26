@@ -20,38 +20,40 @@ function wpec_members_render_list_page() {
         }
     }
 
-    switch( $_GET['tab'] ) {
-        case 'wpec_manage_members' :
-            wpec_members_display_manage_members_table();
-            break;
-        case 'wpec_manage_subscriptions' :
-            wpec_members_display_manage_subscriptions_table();
-            break;
-        case 'wpec_edit_subscription' :
-            wpec_members_display_edit_subscription( $capability );
-            break;
-        case 'wpec_add_subscription' :
-            wpec_members_display_add_subscription( $capability );
-            break;
-        case 'wpec_add_new_member' :
-            wpec_members_display_add_new_member();
-            break;
-        case 'wpec_import_members':
-            wpec_members_display_import_members();
-            break;
-        case 'wpec_manage_settings':
-            wpec_members_display_manage_settings();
-            break;
-        case 'edit_member' :
-            //wpec_members_display_edit_member();
-            wpec_members_display_wpec_edit_member();
-            break;
-        default:
-            wpec_members_display_manage_subscriptions_table();
-    }
+	if ( isset ( $_GET['tab'] ) ) {
+		switch( $_GET['tab'] ) {
+			case 'wpec_manage_members' :
+				wpec_members_display_manage_members_table();
+				break;
+			case 'wpec_manage_subscriptions' :
+				wpec_members_display_manage_subscriptions_table();
+				break;
+			case 'wpec_edit_subscription' :
+				wpec_members_display_edit_subscription( $capability );
+				break;
+			case 'wpec_add_subscription' :
+				wpec_members_display_add_subscription();
+				break;
+			case 'wpec_add_new_member' :
+				wpec_members_display_add_new_member();
+				break;
+			case 'wpec_import_members':
+				wpec_members_display_import_members();
+				break;
+			case 'wpec_manage_settings':
+				wpec_members_display_manage_settings();
+				break;
+			case 'edit_member' :
+				//wpec_members_display_edit_member();
+				wpec_members_display_wpec_edit_member();
+				break;
+		}
+	} else {
+		wpec_members_display_manage_subscriptions_table();
+	}
 }
 
-function wpec_members_display_add_subscription( $capability ) {
+function wpec_members_display_add_subscription() {
     global $wpdb, $wpsc_product_capability_list, $user_ID;
     ?>
 
@@ -206,9 +208,12 @@ function wpec_members_display_manage_members_table() {
         <form id="members-filter" method="get">
             <div class="tablenav top">
                 <p class="searchbox">
-                    <?php $subscribed_members_table->search_box( __( 'Search Subscriber' ), 'search_subscriber' ); ?>
-                    <!-- For plugins, we also need to ensure that the form posts back to our current page -->
-                    <input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
+					<form method="get">
+						<!-- For plugins, we also need to ensure that the form posts back to our current page -->
+						<input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
+						<input type="hidden" name="tab" value="wpec_manage_members" />
+						<?php $subscribed_members_table->search_box( __( 'Search Subscriber' ), 'search_subscriber' ); ?>
+					</form>
                 </p>
                 <div class="alignleft actions">
                     <?php _e('Filter by subscription', 'wpsc_members'); ?>

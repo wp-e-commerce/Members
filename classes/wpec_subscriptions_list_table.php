@@ -51,7 +51,7 @@ class Subscriptions_List_Table extends WP_List_Table {
    }
 
    function process_bulk_action() {
-        $subscription_name = $_GET['subscription'];
+        $subscription_name = isset ( $_GET['subscription'] ) ? $_GET['subscription'] : '';
 
         global $wpsc_product_capability_list;
 

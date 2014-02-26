@@ -302,7 +302,7 @@ function wpec_members_edit_subscriptions() {
     wp_safe_redirect( '?page=wpec_members&tab=wpec_manage_subscriptions' );
 }
 
-if ( $_REQUEST['wpsc_admin_action'] == 'capability_action' ) {
+if ( isset ( $_REQUEST['wpsc_admin_action'] ) && $_REQUEST['wpsc_admin_action'] == 'capability_action' ) {
     add_action( 'admin_init', 'wpec_members_edit_subscriptions' );
 }
 
