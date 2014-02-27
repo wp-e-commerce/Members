@@ -327,7 +327,7 @@ function wpsc_insufficient_capability_messages( $post_content, $post ) {
         $post_content .= " </form>";
         $post_content .= "</div>";
     } else {
-        echo $default_message;
+        //echo $default_message;
     }
 
     return $post_content;
