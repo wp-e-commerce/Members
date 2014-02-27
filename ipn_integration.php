@@ -19,7 +19,7 @@ function wpec_members_pre_gateway_notification( $cart_item_id, $merchant ) {
 
   if ( 'recurring_payment_profile_created' == $ipn['txn_type'] || 'subscr_signup' == $ipn['txn_type'] ) {
     $wpdb->query( "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `transactid` ='{$transaction_id}'  WHERE `id` = " . absint( $purchase_id ) . " LIMIT 1" );
-    error_log( 'PurchaseID = '. $purchase_id . print_r( $ipn, 1 ), 1, "justinsainton@gmail.com","From: ipn@awesome.com\r\n; Subject: Recurring Payment IPN Notification - First Purchase\r\n; Content-Type: text/html" );
+    error_log( 'PurchaseID = '. $purchase_id . print_r( $ipn, 1 ), 1, "jmihaialexandru@gmail.com","From: ipn@awesome.com\r\n; Subject: Recurring Payment IPN Notification - First Purchase\r\n; Content-Type: text/html" );
   }
 
   // Handle additional monthly transactions.  Checks for recency, as this will also get hit on the initial.
@@ -98,7 +98,7 @@ function wpec_members_pre_gateway_notification( $cart_item_id, $merchant ) {
 
     //Email product list email to admin
 
-    error_log( 'PurchaseID = '. $purchase_id . print_r( $ipn, 1 ), 1, "justinsainton@gmail.com","From: ipn@awesome.com\r\n; Subject: Recurring Payment IPN Notification - Subsequent Purchase\r\n; Content-Type: text/html" );
+    error_log( 'PurchaseID = '. $purchase_id . print_r( $ipn, 1 ), 1, "jmihaialexandru@gmail.com","From: ipn@awesome.com\r\n; Subject: Recurring Payment IPN Notification - Subsequent Purchase\r\n; Content-Type: text/html" );
 
     wpec_members_recurring_admin_report( $purchase_id );
 

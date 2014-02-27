@@ -223,7 +223,7 @@ function wpec_members_display_manage_members_table() {
                             $roles = get_option( 'wpsc_product_capability_list' );
                             foreach ( $roles as $role => $key ) {
                             ?>
-                                <option value="<?php echo esc_attr( $role );  ?>" <?php if ( $_REQUEST['subscription_filter'] == $role ) { echo('selected="selected"'); } ?>><?php echo esc_attr( $role );  ?></option><?php
+                                <option value="<?php echo esc_attr( $role );  ?>" <?php if ( isset ( $_REQUEST['subscription_filter'] ) && $_REQUEST['subscription_filter'] == $role ) { echo('selected="selected"'); } ?>><?php echo esc_attr( $role );  ?></option><?php
                             }
                             ?>
                     </select> <input type="submit" class="button-secondary action" value="<?php _e('Go', 'wpsc_members'); ?>" />

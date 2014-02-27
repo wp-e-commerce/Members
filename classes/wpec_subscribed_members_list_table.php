@@ -29,8 +29,8 @@ class Subscribed_Members_List_Table extends WP_List_Table {
 
         //Build row actions
         $actions = array(
-            'delete_all'        => sprintf( '<a href="?page=%s&action=%s&member=%s">' . __('Remove All Subscriptions', 'wpsc_members') . '</a>', $_REQUEST['page'], 'delete_all', $item['ID'] ),
-            'edit_subscription' => sprintf( '<a href="?page=%s&action=%s&member=%s&tab=edit_member">' . __('Edit Subscriptions', 'wpsc_members') . '</a>', $_REQUEST['page'], 'edit', $item['ID'] ),
+            'delete_all'        => sprintf( '<a href="admin.php?page=%s&action=%s&member=%s">' . __('Remove All Subscriptions', 'wpsc_members') . '</a>', $_REQUEST['page'], 'delete_all', $item['ID'] ),
+            'edit_subscription' => sprintf( '<a href="admin.php?page=%s&action=%s&member=%s&tab=edit_member">' . __('Edit Subscriptions', 'wpsc_members') . '</a>', $_REQUEST['page'], 'edit', $item['ID'] ),
         );
 
         //Return the title contents
@@ -82,8 +82,6 @@ class Subscribed_Members_List_Table extends WP_List_Table {
     }
 
     function get_sortable_columns() {
-        global $wpdb;
-
         $sortable_columns = array(
             'username'                  => array( "user_login", true ),     //true means its already sorted
             'name'                      => array( "name" ),
@@ -97,7 +95,7 @@ class Subscribed_Members_List_Table extends WP_List_Table {
     }
 
     function process_bulk_action() {
-        $user_id = $_GET['member'];
+        $user_id = isset( $_GET['member'] ) ? $_GET['member'] : '';
         if( 'delete_all' === $this->current_action() )
             wpec_members_remove_all_capabilities( $user_id );
     }

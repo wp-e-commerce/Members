@@ -20,8 +20,8 @@ class Subscriptions_List_Table extends WP_List_Table {
     function column_name( $item ) {
         //Build row actions
         $actions = array(
-            'delete'    => sprintf( '<a href="?page=wpec_members&tab=wpec_manage_subscriptions&action=%s&subscription=%s">' . __('Delete', 'wpsc_members') . '</a>','delete', urlencode( $item['name'] ) ),
-            'edit'      => sprintf( '<a href="?page=wpec_members&tab=wpec_edit_subscription&action=%s&subscription=%s">' . __('Edit', 'wpsc_members') . '</a>','edit', urlencode( $item['name'] ) ),
+            'delete'    => sprintf( '<a href="admin.php?page=wpec_members&tab=wpec_manage_subscriptions&action=%s&subscription=%s">' . __('Delete', 'wpsc_members') . '</a>','delete', urlencode( $item['name'] ) ),
+            'edit'      => sprintf( '<a href="admin.php?page=wpec_members&tab=wpec_edit_subscription&action=%s&subscription=%s">' . __('Edit', 'wpsc_members') . '</a>','edit', urlencode( $item['name'] ) ),
         );
 
         //Return the title contents
