@@ -12,7 +12,7 @@ Requires at least: WP-e-commerce 3.7 and Gold Cart
 This plugin allows you to create subscriptions, which can be sold as products, Subscriptions are created to manage the content and restrict users to your pages.
 This plugin also allows you to manage and update your users, adjust your subscription lengths and rebill users for there subscription automatically.
 
-http://getshopped.org/extend/premium-upgrades/premium-upgrades/members-only-module/
+http://getshopped.org/premium-upgrades/premium-plugin/member-access-plugin/
 
 == Installation ==
 
@@ -23,12 +23,12 @@ Download WP e-commerce: http://getshopped.org
 
 1. Upload the 'members_access_plugin' to the '/wp-content/plugins/' directory
 
-2. Activate ‘members_access_plugin’ through the ‘Plugins’ menu in WordPress
+2. Activate members_access_plugin through the Plugins menu in WordPress
 
 
 ==== Upgrading from Members only module to the new Members and Capability plugin ====
 
-1. Remove ALL 'members only files' or 'members' from 'gold_cart_files' from the ‘/wp-content/uploads/wpsc/upgrades/’ directory (if using WP-e-commerce 3.6) or /wp-content/plugins/gold_cart_files_plugin (for WP-e-Commerce 3.7), This must be done first as it causes conflicts with the new files.
+1. Remove ALL 'members only files' or 'members' from 'gold_cart_files' from the /wp-content/uploads/wpsc/upgrades/ directory (if using WP-e-commerce 3.6) or /wp-content/plugins/gold_cart_files_plugin (for WP-e-Commerce 3.7), This must be done first as it causes conflicts with the new files.
 
 2. Note if your upgrading you will need to recreate all your subscriptions again and their products - however for your users that have already bought a subscription please see the section on importing and manually applying their subscriptions - this technique can be used to reapply the capabilities to your users without them even knowing.
 
