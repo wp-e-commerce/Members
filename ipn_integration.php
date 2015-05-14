@@ -12,15 +12,16 @@ function wpec_members_pre_gateway_notification( $cart_item_id, $merchant ) {
   global $wpdb;
 
   $ipn = $merchant->paypal_ipn_values;
+  
+  
   $purchase_id = $wpdb->get_var( "SELECT purchaseid FROM `" . WPSC_TABLE_CART_CONTENTS . "` WHERE `id` = " . $cart_item_id );
   $transaction_id = isset( $ipn['subscr_id'] ) ? $ipn['subscr_id'] : $ipn['recurring_payment_id'];
 
-  //Handle initial transaction - updates transaction ID with subscription ID
+	//Handle initial transaction - updates transaction ID with subscription ID
 
   if ( 'recurring_payment_profile_created' == $ipn['txn_type'] || 'subscr_signup' == $ipn['txn_type'] ) {
     $wpdb->query( "UPDATE `" . WPSC_TABLE_PURCHASE_LOGS . "` SET `transactid` ='{$transaction_id}'  WHERE `id` = " . absint( $purchase_id ) . " LIMIT 1" );
-    //error_log( 'PurchaseID = '. $purchase_id . print_r( $ipn, 1 ), 1, "jmihaialexandru@gmail.com","From: ipn@awesome.com\r\n; Subject: Recurring Payment IPN Notification - First Purchase\r\n; Content-Type: text/html" );
-  }
+ }
 
   // Handle additional monthly transactions.  Checks for recency, as this will also get hit on the initial.
   // We basically check amount, first/last name, email and recency, then duplicate purchase log
@@ -39,32 +40,34 @@ function wpec_members_pre_gateway_notification( $cart_item_id, $merchant ) {
       return;
 
     //Duplicate Purchase Log
-    $wpdb->insert( WPSC_TABLE_PURCHASE_LOGS, array(
-      'totalprice' => $original_transaction->totalprice,
-      'statusno' => $original_transaction->statusno,
-      'user_ID' => $original_transaction->user_ID,
-      'sessionid' => uniqid( 'monthly_', true ),
-      'processed' => '3',
-      'transactid' => $original_transaction->transactid,
-      'date' => strtotime( current_time( 'mysql' ) ),
-      'gateway' => $original_transaction->gateway,
-      'billing_country' => $original_transaction->billing_country,
-      'shipping_country' => $original_transaction->shipping_country,
-      'billing_region' => $original_transaction->billing_region,
-      'shipping_region' => $original_transaction->shipping_region,
-      'base_shipping' => $original_transaction->base_shipping,
-      'shipping_method' => $original_transaction->shipping_method,
-      'shipping_option' => $original_transaction->shipping_option,
-      'plugin_version' => WPSC_VERSION,
-      'discount_value' => $original_transaction->discount_value,
-      'discount_data' => $original_transaction->discount_data,
-      'find_us' => $original_transaction->find_us,
-      'wpec_taxes_total' => $original_transaction->wpec_taxes_total,
-      'wpec_taxes_rate' => $original_transaction->wpec_taxes_rate
-    ) );
-
-    $new_id = $wpdb->insert_id;
-
+	$args = array(
+		'totalprice'      	=> $original_transaction->totalprice,
+		'statusno'        	=> $original_transaction->statusno,
+		'sessionid'        	=> uniqid( 'monthly_', true ),
+		'user_ID'          	=> $original_transaction->user_ID,
+		'transactid'		=> $original_transaction->transactid,
+		'processed' 		=>  WPSC_Purchase_Log::ACCEPTED_PAYMENT,
+		'date'             	=> strtotime( current_time( 'mysql' ) ), // To be changed
+		'gateway' 			=> $original_transaction->gateway,
+		'billing_country' 	=> $original_transaction->billing_country,
+		'shipping_country' 	=> $original_transaction->shipping_country,
+		'billing_region' 	=> $original_transaction->billing_region,
+		'shipping_region' 	=> $original_transaction->shipping_region,
+		'base_shipping' 	=> $original_transaction->base_shipping,
+		'shipping_method' 	=> $original_transaction->shipping_method,
+		'shipping_option' 	=> $original_transaction->shipping_option,
+		'plugin_version' 	=> WPSC_VERSION,
+		'discount_value' 	=> $original_transaction->discount_value,
+		'discount_data'	 	=> $original_transaction->discount_data,
+		'find_us' 			=> $original_transaction->find_us,
+		'wpec_taxes_total' 	=> $original_transaction->wpec_taxes_total,
+		'wpec_taxes_rate' 	=> $original_transaction->wpec_taxes_rate
+	);
+	
+	$purchase_log = new WPSC_Purchase_Log( $args );
+	$purchase_log->save();
+	$new_id = $purchase_log->get( 'id' );	
+	
     //Duplicate Submitted Form Data
 
     $old_cart_contents = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . WPSC_TABLE_SUBMITED_FORM_DATA . " WHERE log_id = %d", $original_transaction->id ) );
@@ -98,11 +101,8 @@ function wpec_members_pre_gateway_notification( $cart_item_id, $merchant ) {
 
     //Email product list email to admin
 
-    //error_log( 'PurchaseID = '. $purchase_id . print_r( $ipn, 1 ), 1, "jmihaialexandru@gmail.com","From: ipn@awesome.com\r\n; Subject: Recurring Payment IPN Notification - Subsequent Purchase\r\n; Content-Type: text/html" );
-
     wpec_members_recurring_admin_report( $purchase_id );
-
-  }
+	}
 
 
 }
@@ -315,4 +315,32 @@ function wpec_members_recurring_admin_report( $purchase_id ) {
     wp_mail( get_option( 'purch_log_email' ), __( 'Purchase Report', 'wpsc_members' ), $report );
 
 }
+
+
+/*
+ * Revalidates is_valid_ipn_response() assuming its a subscription request
+ * Not all post fields are sent back in a subscription
+ * @return bool
+ */
+ 
+function wpec_members_subscr_ipn_validation( $valid, $ipn ) {
+	
+	if ( ! $valid ) {
+		switch ( $ipn->paypal_ipn_values['txn_type'] ) {
+			case 'subscr_cancel':
+				$valid = true;
+				break;
+				
+			case 'subscr_signup':
+				$valid = true;
+				break;			
+			default:
+				break;
+		}
+	}
+	
+	return $valid;
+}
+
+add_filter( 'wpsc_paypal_standard_is_valid_ipn_response', 'wpec_members_subscr_ipn_validation', 10, 2 );
 ?>
