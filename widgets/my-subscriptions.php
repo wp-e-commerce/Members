@@ -9,7 +9,7 @@
 
 class WP_Widget_My_Subscriptions extends WP_Widget {
 
-    function WP_Widget_My_Subscriptions() {
+    function __construct() {
         $widget_ops = array( 'classname' => 'widget_my_subscriptions', 'description' => __('A widget to display your current active subscriptions', 'wpsc_members') );
         $control_ops = array( 'width' => 400, 'height' => 350 );
         $this->WP_Widget( 'my_subscriptions', __('My Subscriptions', 'wpsc_members'), $widget_ops, $control_ops );
